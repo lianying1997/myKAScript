@@ -485,29 +485,30 @@ namespace KarlinScriptNamespace
 
             // 记录下被释放SoulShade的分身位置，找到对应的skillId，判断分身是否位于北
             var tpos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
-            var skillId = P3JumpSkill[P3_copyCatCount - 1];
+            // var skillId = P3JumpSkill[P3_copyCatCount - 1];
+            var skillId = P3JumpSkill[P3TetherTarget.IndexOf(sid)];
             var isNorthCopy = Math.Abs(tpos.Z - 95) < 1;
 
             Vector3 dv = default;
 
             if (isNorthCopy)
-            {
+            {                
                 dv = isLeftJumpSkill(skillId) ? new(10, 0, 0) : new(-10, 0, 0);
                 string mentionTxt = $"{(isLeftJumpSkill(skillId) ? "2" : "1")}{(isFanSkill(skillId) ? "扇" : (isOutSafeFirst(skillId) ? "外" : "内"))}";
-                accessory.Log.Debug($"似乎可以提醒队友：{mentionTxt}……");
+                accessory.Method.TextInfo($"似乎可以提醒队友：{mentionTxt}……", 5000);
                 if (P3_ChatGuidance)
                 {
-                    accessory.Method.SendChat($"---- {mentionTxt} ----");
+                    accessory.Method.SendChat($"/p ---- {mentionTxt} ----");
                 }
             }
             else
-            {
+            {                
                 dv = isLeftJumpSkill(skillId) ? new(-10, 0, 0) : new(10, 0, 0);
                 string mentionTxt = $"{(isLeftJumpSkill(skillId) ? "4" : "3")}{(isFanSkill(skillId) ? "扇" : (isOutSafeFirst(skillId) ? "外" : "内"))}";
-                accessory.Log.Debug($"似乎可以提醒队友：{mentionTxt}……");
+                accessory.Method.TextInfo($"似乎可以提醒队友：{mentionTxt}……", 5000);
                 if (P3_ChatGuidance)
                 {
-                    accessory.Method.SendChat($"---- {mentionTxt} ----");
+                    accessory.Method.SendChat($"/p ---- {mentionTxt} ----");
                 }
             }
 
@@ -515,6 +516,7 @@ namespace KarlinScriptNamespace
             destinationPos = tpos + dv;
             P3_copyCatPos[P3_copyCatCount - 1] = destinationPos;
 
+            if (P3_copyCatCount > 2) return;
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"跳跃目的地-{(isNorthCopy ? "A" : "C")}";
             dp.Scale = new(2);
