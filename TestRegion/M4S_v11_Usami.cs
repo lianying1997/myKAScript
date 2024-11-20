@@ -1243,14 +1243,14 @@ namespace KarlinScriptNamespace
 
             //<add>
             // 此处新增一个画画，该机制需先在场中引导大黄圈，避免将大黄圈放进既定安全区
-            // TODO: 需确定大黄圈的范围
             accessory.Method.TextInfo("先【场中引导】黄圈", 7000, true);
             for (int i = 0; i < 8; i++)
             {
                 dp.Name = $"黄圈引导";
-                dp.Scale = new(20);
+                dp.Scale = new(10);
                 dp.Owner = accessory.Data.PartyList[i];
                 dp.Color = accessory.Data.DefaultDangerColor;
+                
                 dp.Delay = 0;
                 dp.DestoryAt = 5000;
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
@@ -1258,6 +1258,22 @@ namespace KarlinScriptNamespace
             //<addend>
 
         }
+
+        // [ScriptMethod(name: "debug画画", eventType: EventTypeEnum.Chat, eventCondition: ["Message:regex:^(123)$"])]
+        // public void debug画画(Event @event, ScriptAccessory accessory)
+        // {
+        //     accessory.Log.Debug($"检测到了聊天1");
+        //     var dp = accessory.Data.GetDefaultDrawProperties();
+        //     dp.Name = $"黄圈引导";
+        //     dp.Scale = new(10);
+        //     dp.Owner = accessory.Data.Me;
+        //     // dp.Color = accessory.Data.DefaultDangerColor;
+        //     dp.Color = accessory.Data.DefaultSafeColor;
+        //     dp.Delay = 0;
+        //     dp.DestoryAt = 5000;
+        //     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        // }
+
         [ScriptMethod(name: "分身月环十字", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:regex:^(456[1234])$"])]
         public void 分身月环十字(Event @event, ScriptAccessory accessory)
         {
