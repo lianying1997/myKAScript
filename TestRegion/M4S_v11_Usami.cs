@@ -346,6 +346,8 @@ namespace KarlinScriptNamespace
             dp.DestoryAt = 3500;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
+            // <change>
+            // 实战中提前出现会导致两个箭头重叠，个人喜好观感不舒服
             dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "钢铁月环组合技-地面-12";
             dp.Scale = new(2);
@@ -353,8 +355,10 @@ namespace KarlinScriptNamespace
             dp.TargetPosition = pos[index, 1];
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Color = accessory.Data.DefaultSafeColor;
-            dp.Delay = 0;
-            dp.DestoryAt = 15000;
+            // dp.Delay = 0;
+            // dp.DestoryAt = 15000;
+            dp.Delay = 15000;
+            dp.DestoryAt = 3500;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
             dp = accessory.Data.GetDefaultDrawProperties();
@@ -364,7 +368,9 @@ namespace KarlinScriptNamespace
             dp.TargetPosition = pos[index, 2];
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Color = accessory.Data.DefaultSafeColor;
-            dp.Delay = 15000;
+            // dp.Delay = 15000;
+            // dp.DestoryAt = 3500;
+            dp.Delay = 18500;
             dp.DestoryAt = 3500;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
@@ -375,9 +381,12 @@ namespace KarlinScriptNamespace
             dp.TargetPosition = pos[index, 3];
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Color = accessory.Data.DefaultSafeColor;
-            dp.Delay = 18500;
+            // dp.Delay = 18500;
+            // dp.DestoryAt = 3500;
+            dp.Delay = 22000;
             dp.DestoryAt = 3500;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            // <changeend>
         }
 
         [ScriptMethod(name: "雷球直线aoe", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17325"])]
@@ -1232,6 +1241,22 @@ namespace KarlinScriptNamespace
             dp.DestoryAt = 8000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
 
+            //<add>
+            // 此处新增一个画画，该机制需先在场中引导大黄圈，避免将大黄圈放进既定安全区
+            // TODO: 需确定大黄圈的范围
+            accessory.Method.TextInfo("先【场中引导】黄圈", 7000, true);
+            for (int i = 0; i < 8; i++)
+            {
+                dp.Name = $"黄圈引导";
+                dp.Scale = new(20);
+                dp.Owner = accessory.Data.PartyList[i];
+                dp.Color = accessory.Data.DefaultDangerColor;
+                dp.Delay = 0;
+                dp.DestoryAt = 5000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            }
+            //<addend>
+
         }
         [ScriptMethod(name: "分身月环十字", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:regex:^(456[1234])$"])]
         public void 分身月环十字(Event @event, ScriptAccessory accessory)
@@ -1735,6 +1760,16 @@ namespace KarlinScriptNamespace
             {
                 towerCount++;
                 isYellowGun[dir4] = @event["StackCount"] == "244";
+
+                // <add> 超级详细的调试日志
+                // 定义方向和颜色的映射
+                string[] directions = { "右上", "右下", "左下", "左上" };
+                string color = isYellowGun[dir4] ? "黄" : "蓝";
+                string dir = directions[dir4];
+                string str = $"towerCount = {towerCount}，发现{dir}({dir4})炮，是{color}炮";
+                accessory.Log.Debug($"{str}");
+                // <addend>
+
                 if (towerCount != 4 && towerCount != 8) return;
                 if (long4000[myIndex] && towerCount == 4) return;
                 if (!long4000[myIndex] && towerCount == 8) return;
